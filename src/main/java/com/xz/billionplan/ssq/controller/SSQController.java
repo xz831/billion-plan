@@ -130,26 +130,26 @@ public class SSQController {
         Map<String,String> map = new TreeMap<>();
         list.sort(Comparator.comparingInt(item->-item.getId()));
         for (int i = 0; i < times ; i++) {
-            SSQBean SSQBean = list.get(i);
+            SSQBean bean = list.get(i);
             for (int j = 1; j < 8; j++) {
-                Class<? extends SSQBean> clazz = SSQBean.getClass();
+                Class<? extends SSQBean> clazz = SSQBean.class;
                 Method method = clazz.getMethod("getNum" + j);
                 if(map.containsKey("num"+j)){
-                    map.put("num"+j,String.valueOf(Integer.parseInt(map.get("num"+j))+(int)method.invoke(SSQBean)));
+                    map.put("num"+j,String.valueOf(Integer.parseInt(map.get("num"+j))+(int)method.invoke(bean)));
                 }else{
-                    map.put("num"+j,(int)method.invoke(SSQBean)+"");
+                    map.put("num"+j,(int)method.invoke(bean)+"");
                 }
             }
         }
-        SSQBean SSQBean = list.get(0);
+        SSQBean bean = list.get(0);
         int finalTimes = times;
         map.forEach((k, v)-> {
             int i = Integer.parseInt(v) / finalTimes;
             String s = "get" + k.substring(0, 1).toUpperCase() + k.substring(1);
-            Class<SSQBean> SSQBeanClass = SSQBean.class;
+            Class<SSQBean> clazz = SSQBean.class;
             try {
-                Method method = SSQBeanClass.getMethod(s);
-                map.put(k,(i==(int)method.invoke(SSQBean)?"":i>(int)method.invoke(SSQBean)?"+":"-")+i);
+                Method method = clazz.getMethod(s);
+                map.put(k,(i==(int)method.invoke(bean)?"":i>(int)method.invoke(bean)?"+":"-")+i);
             } catch (Exception e) {
                 log.info(e.getMessage());
             }
